@@ -15,9 +15,29 @@ class TransactionController extends ResourceController
     // GET /api/transactions
     public function index()
     {
+        $page = (int) $this->request->getGet('page') ?: 1;
+        $perPage = (int) $this->request->getGet('perPage') ?: 10;
+        $offset = ($page - 1) * $perPage;
+
         $model = new TransactionModel();
-        $data = $model->orderBy('created_at', 'DESC')->findAll();
-        return $this->respond(['success' => true, 'data' => $data]);
+        $result = $model->withProduct($perPage, $offset);
+
+        $data = array_map(fn($row) => [
+            'id' => (int) $row['id'],
+            'product_id' => (int) $row['product_id'],
+            'quantity' => (int) $row['quantity'],
+            'product_stock' => isset($row['product_stock']) ? (int) $row['product_stock'] : null,
+            'type' => $row['type'],
+            'product_name' => $row['product_name'] ?? null,
+            'created_at' => $row['created_at'],
+        ], $result['data']);
+
+        return $this->respond(['success' => true, 'data' => $data, 'pagination' => [
+            'page' => $page,
+            'perPage' => $perPage,
+            'total' => $result['total'],
+            'totalPages' => ceil($result['total'] / $perPage)
+        ]]);
     }
 
     // POST /api/transactions

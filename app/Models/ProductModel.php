@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use App\Entities\Product;
+use App\Entities\ProductEntity;
 
 class ProductModel extends BaseModel
 {
@@ -14,5 +14,5 @@ class ProductModel extends BaseModel
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
 
-    protected $returnType = Product::class;
+    protected $returnType = ProductEntity::class;
 }

@@ -3,7 +3,7 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
-class Product extends Entity
+class ProductEntity extends Entity
 {
     protected $casts = [
         'id' => 'integer',
