@@ -13,7 +13,7 @@
 
 # container name (change if different in docker-compose.yaml)
 CONTAINER_NAME="simple-wms-backend"
-DB_CONTAINER="postgres_container"
+DB_CONTAINER="wms-postgres"
 varOcg="php spark" # example variable for migration execution
 
 # function: print help
@@ -76,10 +76,13 @@ case $COMMAND in
     docker exec -it $CONTAINER_NAME php spark migrate:status
     ;;
   db-tables)
-    docker exec -it $DB_CONTAINER psql -U postgres -d wms_db -c "\dt"
+    docker exec -it $DB_CONTAINER psql -U wms_user -d wms_db -c "\dt"
     ;;
   logs)
     docker logs -f $CONTAINER_NAME
+    ;;
+  psql)
+    docker exec -it $DB_CONTAINER psql -U wms_user -d wms_db
     ;;
   help|*)
     show_help

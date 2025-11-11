@@ -10,12 +10,11 @@ class CreateProductsTable extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'unsigned' => true,
+                'type' => 'SERIAL',
+                'null' => false,
                 'auto_increment' => true,
             ],
-            'nama_barang' => [
+            'name' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255
             ],
@@ -25,17 +24,17 @@ class CreateProductsTable extends Migration
                 'null' => false,
                 'unique' => true
             ],
-            'stok' => [
+            'stock' => [
                 'type' => 'INT',
                 'constraint' => 11,
                 'default' => 0
             ],
-            'lokasi_rak' => [
+            'shelf_location' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
                 'null' => true
             ],
-            'minimum_stok' => [
+            'minimum_stock' => [
                 'type' => 'INT',
                 'constraint' => 11,
                 'default' => 0

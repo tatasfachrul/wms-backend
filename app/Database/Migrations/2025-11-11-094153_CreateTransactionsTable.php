@@ -13,9 +13,10 @@ class CreateTransactionsTable extends Migration
             'id' => [
                 'type' => 'SERIAL',
                 'null' => false,
+                'auto_increment' => true,
             ],
             'product_id' => [
-                'type' => 'INT',
+                'type' => 'SERIAL',
                 'null' => false,
             ],
             'type' => [
