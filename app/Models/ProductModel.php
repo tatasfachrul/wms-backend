@@ -14,5 +14,5 @@ class ProductModel extends BaseModel
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
 
-    protected $returnType = ProductEntity::class;
+    protected $returnType = 'array';
 }

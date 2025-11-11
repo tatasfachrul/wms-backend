@@ -31,10 +31,10 @@ class ProductController extends ResourceController
 
         // Validate sort column (simple whitelist)
         $allowedSort = ['id', 'name', 'sku', 'stock', 'minimum_stock'];
-        if (!in_array($sort, $allowedSort)){
+        if (!in_array($sort, $allowedSort)) {
             $sort = 'id';
         }
-       
+
         // Pagination
         $offset = ($page - 1) * $perPage;
 
@@ -42,7 +42,18 @@ class ProductController extends ResourceController
         $total = $builder->countAllResults(false);
         $data = $builder->orderBy($sort, $order)->findAll($perPage, $offset);
 
-        
+        $data = array_map(fn($row) => [
+            'id' => (int) $row['id'],
+            'stock' => (int) $row['stock'],
+            'minimum_stock' => (int) $row['minimum_stock'],
+            'name' => $row['name'],
+            'sku' => $row['sku'],
+            'shelf_location' => $row['shelf_location'],
+            'created_at' => $row['created_at'],
+            'updated_at' => $row['updated_at'],
+        ], $data);
+
+
         return $this->respond([
             'success' => true,
             'data' => $data,
@@ -61,6 +72,11 @@ class ProductController extends ResourceController
         $data = $this->model->find($id);
         if (!$data)
             return $this->failNotFound("Product not found");
+
+        $data['id'] = (int) $data['id'];
+        $data['stock'] = (int) $data['stock'];
+        $data['minimum_stock'] = (int) $data['minimum_stock'];
+        
         return $this->respond(['success' => true, 'data' => $data]);
     }
 
@@ -112,7 +128,7 @@ class ProductController extends ResourceController
         }
 
         // update entity
-        foreach ($payload as $key=> $value) {
+        foreach ($payload as $key => $value) {
             $product->$key = $value;
         }
 
