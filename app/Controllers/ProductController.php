@@ -21,11 +21,11 @@ class ProductController extends ResourceController
         $builder = $this->model;
 
         if ($q) {
-            $builder = $builder->like('nama_barang', $q)->orLike('sku', $q);
+            $builder = $builder->like('name', $q)->orLike('sku', $q);
         }
 
         // Validate sort column (simple whitelist)
-        $allowedSort = ['id', 'nama_barang', 'sku', 'stok', 'minimum_stok'];
+        $allowedSort = ['id', 'name', 'sku', 'stock', 'minimum_stock'];
         if (!in_array($sort, $allowedSort))
             $sort = 'id';
         $order = (strtoupper($order) === 'DESC') ? 'DESC' : 'ASC';
@@ -56,9 +56,9 @@ class ProductController extends ResourceController
     {
         $payload = $this->request->getJSON(true) ?: $this->request->getPost();
         $rules = [
-            'nama_barang' => 'required|max_length[255]',
+            'name' => 'required|max_length[255]',
             'sku' => 'required|max_length[100]',
-            'stok' => 'required|integer',
+            'stock' => 'required|integer',
         ];
         if (!$this->validate($rules)) {
             return $this->failValidationErrors($this->validator->getErrors());
@@ -83,9 +83,9 @@ class ProductController extends ResourceController
 
         $payload = $this->request->getJSON(true) ?: $this->request->getRawInput();
         $rules = [
-            'nama_barang' => 'permit_empty|max_length[255]',
+            'name' => 'permit_empty|max_length[255]',
             'sku' => 'permit_empty|max_length[100]',
-            'stok' => 'permit_empty|integer',
+            'stock' => 'permit_empty|integer',
         ];
         if (!$this->validate($rules)) {
             return $this->failValidationErrors($this->validator->getErrors());

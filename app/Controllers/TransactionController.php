@@ -46,9 +46,9 @@ class TransactionController extends ResourceController
         $db->transStart();
 
         if ($type === 'IN') {
-            $newStock = $product['stok'] + $quantity;
+            $newStock = $product['stock'] + $quantity;
         } else { // OUT
-            $newStock = $product['stok'] - $quantity;
+            $newStock = $product['stock'] - $quantity;
             if ($newStock < 0) {
                 $db->transComplete(); // just finish
                 return $this->failValidationError('Insufficient stock');
@@ -56,7 +56,7 @@ class TransactionController extends ResourceController
         }
 
         // update stock
-        $productModel->update($product['id'], ['stok' => $newStock]);
+        $productModel->update($product['id'], ['stock' => $newStock]);
 
         // insert transaction
         $transModel = new TransactionModel();
@@ -78,7 +78,7 @@ class TransactionController extends ResourceController
                 'product_id' => $product['id'],
                 'type' => $type,
                 'quantity' => $quantity,
-                'stok' => $newStock
+                'stock' => $newStock
             ]
         ]);
     }

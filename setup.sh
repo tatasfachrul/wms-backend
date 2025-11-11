@@ -84,6 +84,9 @@ case $COMMAND in
   psql)
     docker exec -it $DB_CONTAINER psql -U wms_user -d wms_db
     ;;
+  seed)
+    docker exec -it ${CONTAINER_NAME} php spark db:seed DatabaseSeeder
+    ;;
   help|*)
     show_help
     ;;
