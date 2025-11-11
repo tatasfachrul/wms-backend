@@ -14,7 +14,7 @@ $routes->group('api', function ($routes) {
     $routes->get('products', 'ProductController::index');
     $routes->get('products/(:num)', 'ProductController::show/$1');
     $routes->post('products', 'ProductController::create');
-    $routes->put('products/(:num)', 'ProductController::update/$1');
+    $routes->patch('products/(:num)', 'ProductController::update/$1');
     $routes->delete('products/(:num)', 'ProductController::delete/$1');
 
     // transactions

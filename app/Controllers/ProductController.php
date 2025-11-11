@@ -13,32 +13,45 @@ class ProductController extends ResourceController
     // GET /api/products
     public function index()
     {
-        $q = $this->request->getGet('q'); // search
+        // Query params
+        $keyword = $this->request->getGet('keyword');
         $sort = $this->request->getGet('sort', FILTER_SANITIZE_STRING) ?: 'id';
-        $order = $this->request->getGet('order', FILTER_SANITIZE_STRING) ?: 'ASC';
-        $limit = (int) $this->request->getGet('limit') ?: null;
+        $order = strtoupper($this->request->getGet('order', FILTER_SANITIZE_STRING)) === 'DESC' ? 'DESC' : 'ASC';
+        $page = (int) $this->request->getGet('page') ?: 1;
+        $perPage = (int) $this->request->getGet('perPage') ?: 10;
 
         $builder = $this->model;
 
-        if ($q) {
-            $builder = $builder->like('name', $q)->orLike('sku', $q);
+        if ($keyword) {
+            $builder = $builder->groupStart()
+                ->like('LOWER(name)', strtolower($keyword))
+                ->orLike('LOWER(sku)', strtolower($keyword))
+                ->groupEnd();
         }
 
         // Validate sort column (simple whitelist)
         $allowedSort = ['id', 'name', 'sku', 'stock', 'minimum_stock'];
-        if (!in_array($sort, $allowedSort))
+        if (!in_array($sort, $allowedSort)){
             $sort = 'id';
-        $order = (strtoupper($order) === 'DESC') ? 'DESC' : 'ASC';
+        }
+       
+        // Pagination
+        $offset = ($page - 1) * $perPage;
 
-        $data = $builder->orderBy($sort, $order);
-        if ($limit)
-            $data = $data->findAll($limit);
-        else
-            $data = $data->findAll();
+        // Fetch Data
+        $total = $builder->countAllResults(false);
+        $data = $builder->orderBy($sort, $order)->findAll($perPage, $offset);
 
+        
         return $this->respond([
             'success' => true,
-            'data' => $data
+            'data' => $data,
+            'meta' => [
+                'page' => $page,
+                'perPage' => $perPage,
+                'total' => $total,
+                'totalPages' => ceil($total / $perPage)
+            ]
         ]);
     }
 
@@ -92,10 +105,15 @@ class ProductController extends ResourceController
         }
 
         // if SKU changed, ensure unique
-        if (!empty($payload['sku']) && $payload['sku'] !== $product['sku']) {
+        if (!empty($payload['sku']) && $payload['sku'] !== $product->sku) {
             if ($this->model->where('sku', $payload['sku'])->first()) {
                 return $this->failValidationError('SKU already exists');
             }
+        }
+
+        // update entity
+        foreach ($payload as $key=> $value) {
+            $product->$key = $value;
         }
 
         $this->model->update($id, $payload);

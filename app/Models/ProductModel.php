@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Entities\Product;
 
-class ProductModel extends Model
+class ProductModel extends BaseModel
 {
     protected $table = 'products';
     protected $primaryKey = 'id';
@@ -12,4 +13,6 @@ class ProductModel extends Model
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
+
+    protected $returnType = Product::class;
 }
