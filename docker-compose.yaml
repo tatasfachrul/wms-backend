@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: simple-wms-backend
+    ports:
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - CI_ENVIRONMENT=development
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:15
+    container_name: wms-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: wms_user
+      POSTGRES_PASSWORD: wms_password
+      POSTGRES_DB: wms_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
