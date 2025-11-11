@@ -1,4 +1,43 @@
 # CodeIgniter 4 Application Starter
+## How to start development
+
+### Requirement
+Ensure docker is installed for easy setup.
+
+#### Install dependency
+> composer install
+
+#### Setup.sh
+> chmod +x setup.sh
+
+#### Build
+> docker-compose build --no-cache
+
+#### Running Development
+for detach mode:
+> docker-compose up -d
+
+for watch mode:
+> docker-compose up
+
+##### Setup usage
+| Command                                      | Description               |
+| :-------------------------------------------- | :------------------------- |
+| `./setup.sh up`                              | Start containers          |
+| `./setup.sh down`                            | Stop containers           |
+| `./setup.sh restart`                         | Restart containers        |
+| `./setup.sh bash`                            | Enter backend container   |
+| `./setup.sh make-migration CreateUsersTable` | Create migration file     |
+| `./setup.sh migrate`                         | Run all migrations        |
+| `./setup.sh rollback`                        | Rollback last migration   |
+| `./setup.sh refresh`                         | Drop and rerun migrations |
+| `./setup.sh migrate-status`                  | Show migration status     |
+| `./setup.sh db-tables`                       | List PostgreSQL tables    |
+| `./setup.sh logs`                            | Show backend logs         |
+
+
+
+
 
 ## What is CodeIgniter?
 

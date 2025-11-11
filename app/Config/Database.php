@@ -26,26 +26,7 @@ class Database extends Config
      *
      * @var array<string, mixed>
      */
-    public array $default = [
-        'DSN'          => '',
-        'hostname'     => 'localhost',
-        'username'     => '',
-        'password'     => '',
-        'database'     => '',
-        'DBDriver'     => 'MySQLi',
-        'DBPrefix'     => '',
-        'pConnect'     => false,
-        'DBDebug'      => true,
-        'charset'      => 'utf8',
-        'DBCollat'     => 'utf8_general_ci',
-        'swapPre'      => '',
-        'encrypt'      => false,
-        'compress'     => false,
-        'strictOn'     => false,
-        'failover'     => [],
-        'port'         => 3306,
-        'numberNative' => false,
-    ];
+    public array $default;
 
     /**
      * This database connection is used when
@@ -54,23 +35,23 @@ class Database extends Config
      * @var array<string, mixed>
      */
     public array $tests = [
-        'DSN'         => '',
-        'hostname'    => '127.0.0.1',
-        'username'    => '',
-        'password'    => '',
-        'database'    => ':memory:',
-        'DBDriver'    => 'SQLite3',
-        'DBPrefix'    => 'db_',  // Needed to ensure we're working correctly with prefixes live. DO NOT REMOVE FOR CI DEVS
-        'pConnect'    => false,
-        'DBDebug'     => true,
-        'charset'     => 'utf8',
-        'DBCollat'    => 'utf8_general_ci',
-        'swapPre'     => '',
-        'encrypt'     => false,
-        'compress'    => false,
-        'strictOn'    => false,
-        'failover'    => [],
-        'port'        => 3306,
+        'DSN' => '',
+        'hostname' => '127.0.0.1',
+        'username' => '',
+        'password' => '',
+        'database' => ':memory:',
+        'DBDriver' => 'SQLite3',
+        'DBPrefix' => 'db_',  // Needed to ensure we're working correctly with prefixes live. DO NOT REMOVE FOR CI DEVS
+        'pConnect' => false,
+        'DBDebug' => true,
+        'charset' => 'utf8',
+        'DBCollat' => 'utf8_general_ci',
+        'swapPre' => '',
+        'encrypt' => false,
+        'compress' => false,
+        'strictOn' => false,
+        'failover' => [],
+        'port' => 3306,
         'foreignKeys' => true,
         'busyTimeout' => 1000,
     ];
@@ -85,5 +66,26 @@ class Database extends Config
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
+
+        $this->default = [
+            'DSN' => '',
+            'hostname' => env('database.default.hostname', 'localhost'),
+            'username' => env('database.default.username', 'postgres'),
+            'password' => env('database.default.password', 'postgres'),
+            'database' => env('database.default.database', 'wms_db'),
+            'DBDriver' => env('database.default.DBDriver', 'Postgre'),
+            'DBPrefix' => env('database.default.DBPrefix', ''),
+            'pConnect' => false,
+            'DBDebug' => (bool) env('database.default.DBDebug', true),
+            'charset' => 'utf8',
+            'DBCollat' => 'utf8_general_ci',
+            'swapPre' => '',
+            'encrypt' => false,
+            'compress' => false,
+            'strictOn' => false,
+            'failover' => [],
+            'port' => env('database.default.port', 5432),
+            'numberNative' => false,
+        ];
     }
 }
