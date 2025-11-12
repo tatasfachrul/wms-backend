@@ -29,7 +29,10 @@ function show_help() {
   echo "  make-migration X  - create new migration named X"
   echo "  migrate-status    - show migration status"
   echo "  db-tables         - list PostgreSQL tables"
+  echo "  seed              - Seed data"
   echo "  logs              - show backend logs"
+  echo "  psql              - access postgres directly"
+  echo "  clear-php         - clear php"
   echo "  help              - show this help message"
 }
 
@@ -86,6 +89,9 @@ case $COMMAND in
     ;;
   seed)
     docker exec -it ${CONTAINER_NAME} php spark db:seed DatabaseSeeder
+    ;;
+  clear-php)
+    docker exec -it simple-wms-backend php spark cache:clear
     ;;
   help|*)
     show_help
