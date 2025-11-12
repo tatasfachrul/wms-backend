@@ -23,5 +23,7 @@ $routes->group('api', function ($routes) {
 
     // auth (optional)
     $routes->post('auth/login', 'AuthController::login');
+    $routes->get('profile', 'AuthController::profile');
+    $routes->post('register', 'AuthController::profile');
 });
 

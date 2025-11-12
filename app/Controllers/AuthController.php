@@ -33,13 +33,86 @@ class AuthController extends ResourceController
 
         return $this->respond([
             'success' => true,
-            'token' => $token,
-            'user' => [
-                'id' => $user['id'],
-                'name' => $user['name'],
-                'email' => $user['email'],
-                'role' => $user['role']
+            'data' => [
+                'token' => $token,
+                'user' => [
+                    'id' => $user['id'],
+                    'name' => $user['name'],
+                    'email' => $user['email'],
+                    'role' => $user['role']
+                ]
             ]
+            
+        ]);
+    }
+
+    public function register()
+    {
+        $payload = $this->request->getJSON(true);
+        if (!$payload || empty($payload['email']) || empty($payload['password']) || empty($payload['name'])) {
+            return $this->failValidationError('name, email, and password are required');
+        }
+
+        $model = new UserModel();
+
+        // check if email exists
+        if ($model->where('email', $payload['email'])->first()) {
+            return $this->failResourceExists('Email already registered');
+        }
+
+        $data = [
+            'name' => $payload['name'],
+            'email' => $payload['email'],
+            'password' => password_hash($payload['password'], PASSWORD_DEFAULT),
+            'role' => $payload['role'] ?? 'staff'
+        ];
+
+        $model->insert($data);
+
+        return $this->respondCreated([
+            'success' => true,
+            'message' => 'User registered successfully',
+            'user' => [
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'role' => $data['role']
+            ]
+        ]);
+    }
+
+    //
+    public function profile()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            return $this->failUnauthorized('Missing or invalid Authorization header');
+        }
+
+        $token = str_replace('Bearer ', '', $authHeader);
+        $key = getenv('JWT_SECRET') ?: 'supersecret';
+
+        try {
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+        } catch (\Exception $e) {
+            return $this->failUnauthorized('Invalid or expired token');
+        }
+
+        $userId = $decoded->sub ?? null;
+        if (!$userId) {
+            return $this->failUnauthorized('Invalid token payload');
+        }
+
+        $model = new UserModel();
+        $user = $model->find($userId);
+        if (!$user) {
+            return $this->failNotFound('User not found');
+        }
+
+        return $this->respond([
+            'id' => $user['id'],
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'role' => $user['role']
         ]);
     }
 }

@@ -13,5 +13,8 @@ class DatabaseSeeder extends Seeder
 
         echo "Seeding Transactions...\n";
         $this->call('TransactionSeeder');
+
+        echo "Seeding Users...\n";
+        $this->call('UserSeeder');
     }
 }
