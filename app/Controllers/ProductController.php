@@ -110,6 +110,10 @@ class ProductController extends ResourceController
         if (!$product)
             return $this->failNotFound("Product not found");
 
+        if (is_object($product)) {
+            $product = (array) $product;
+        }
+
         $payload = $this->request->getJSON(true) ?: $this->request->getRawInput();
         $rules = [
             'name' => 'permit_empty|max_length[255]',
@@ -121,7 +125,7 @@ class ProductController extends ResourceController
         }
 
         // if SKU changed, ensure unique
-        if (!empty($payload['sku']) && $payload['sku'] !== $product->sku) {
+        if (!empty($payload['sku']) && $payload['sku'] !== ($product['sku'] ?? null)) {
             if ($this->model->where('sku', $payload['sku'])->first()) {
                 return $this->failValidationError('SKU already exists');
             }
@@ -129,7 +133,7 @@ class ProductController extends ResourceController
 
         // update entity
         foreach ($payload as $key => $value) {
-            $product->$key = $value;
+            $product[$key] = $value;
         }
 
         $this->model->update($id, $payload);
