@@ -25,5 +25,9 @@ $routes->group('api', function ($routes) {
     $routes->post('auth/login', 'AuthController::login');
     $routes->get('profile', 'AuthController::profile');
     $routes->post('register', 'AuthController::profile');
+
+    // Dashboards
+    $routes->get('dashboard', 'DashboardController::summary');
+    $routes->get('dashboard/transactions', 'DashboardController::transactionsChart');
 });
 
