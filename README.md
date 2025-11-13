@@ -1,26 +1,49 @@
-# CodeIgniter 4 Application Starter
-## How to start development
+# Getting Started
+You can see full Documentations in here [API Documentations](http://pf2lcuj4rz.apidog.io "API Documentations")
 
+## Prerequisites
+- Node.js 18+ installed
+- npm or yarn package manager
+- Backend API running (see Backend Setup section)
+
+## Installation
 ### Requirement
 Ensure docker is installed for easy setup.
 
-#### Install dependency
-> composer install
+1. **Run Docker Setup** on `Project Root` run
+   ```bash
+   docker-compose build --no-cache && docker-compose up -d
+   ```
 
-#### Setup.sh
-> chmod +x setup.sh
+2. **Give Permission to Script**:
+   ```bash
+   chmod +x setup.sh
+   ```
 
-#### Build
-> docker-compose build --no-cache
+3. **Run Migrate Script** on `Project Root` run:
+   ```bash
+   ./setup.sh migrate
+   ```
 
-#### Running Development
-for detach mode:
-> docker-compose up -d
+3. **Run Seeder Script** on `Project Root` run:
+   ```bash
+   ./setup.sh seed
+   ```
 
-for watch mode:
-> docker-compose up
+### Default User
+**For Admin**
+```bash
+admin@example.com
+admin123
+```
 
-##### Setup usage
+**For Staff**
+```bash
+staff@example.com
+staff123
+```
+
+### Script usage
 | Command                                      | Description               |
 | :-------------------------------------------- | :------------------------- |
 | `./setup.sh up`                              | Start containers          |
